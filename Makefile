@@ -4,7 +4,7 @@ install:
 build:
 	poetry build
 
-package-install:
-	python3 -m pip install --user dist/*.whl
+pack-install:
+	python3 -m pip install --user --force-reinstall dist/*.whl
 
-.PHONY: install build package-install
+.PHONY: install build pack-install
