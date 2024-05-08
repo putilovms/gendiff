@@ -7,4 +7,7 @@ build:
 pack-install:
 	python3 -m pip install --user --force-reinstall dist/*.whl
 
-.PHONY: install build pack-install
+publish:
+	poetry publish --dry-run
+
+.PHONY: install build pack-install publish
