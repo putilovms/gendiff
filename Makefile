@@ -13,4 +13,8 @@ publish:
 gendiff:
 	poetry run gendiff
 
-.PHONY: install build pack-install publish gendiff
+lint:
+	poetry run flake8 gendiff
+
+
+.PHONY: install build pack-install publish gendiff lint
