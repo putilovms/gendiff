@@ -10,4 +10,7 @@ pack-install:
 publish:
 	poetry publish --dry-run
 
-.PHONY: install build pack-install publish
+gendiff:
+	poetry run gendiff
+
+.PHONY: install build pack-install publish gendiff
