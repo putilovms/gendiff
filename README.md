@@ -1,5 +1,6 @@
 ### Code Climate Maintainability and Test Coverage
 [![Maintainability](https://api.codeclimate.com/v1/badges/5303df8bc4f4d733c7a6/maintainability)](https://codeclimate.com/github/putilovms/python-project-50/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5303df8bc4f4d733c7a6/test_coverage)](https://codeclimate.com/github/putilovms/python-project-50/test_coverage)
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/putilovms/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/putilovms/python-project-50/actions)
 ### Diff of flat files (JSON)
