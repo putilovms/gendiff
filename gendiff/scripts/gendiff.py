@@ -47,7 +47,7 @@ def generate_diff(path1, path2):
                 result.append(f'{tab_del}{k}: {v}')
                 result.append(f'{tab_add}{k}: {f2[k]}')
             case(False, False):
-                result.append(f'{tab_equal}{k}: {k}')
+                result.append(f'{tab_equal}{k}: {v}')
     for k, v in diff2.items():
         if k not in f1:
             result.append(f'{tab_add}{k}: {v}')
