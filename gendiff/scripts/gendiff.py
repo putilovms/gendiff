@@ -43,8 +43,6 @@ def generate_diff(path1, path2):
         match (k in diff1, k in diff2):
             case(True, False):
                 result.append(f'{tab["del"]}{k}: {format_value(v)}')
-            case(False, True):
-                result.append(f'{tab["add"]}{k}: {format_value(v)}')
             case(True, True):
                 result.append(f'{tab["del"]}{k}: {format_value(v)}')
                 result.append(f'{tab["add"]}{k}: {format_value(f2[k])}')
