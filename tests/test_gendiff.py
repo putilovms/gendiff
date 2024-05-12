@@ -5,8 +5,8 @@ def test_diff():
     file1_path = 'tests/fixtures/diff1.json'
     file2_path = 'tests/fixtures/diff2.json'
     assert generate_diff(file1_path, file2_path) == '''{
-  - follow: False
-  + verbose: True
+  - follow: false
+  + verbose: true
 }'''
 
 
@@ -31,7 +31,7 @@ def test_add():
     file2_path = 'tests/fixtures/add2.json'
     assert generate_diff(file1_path, file2_path) == '''{
     host: hexlet.io
-  + verbose: True
+  + verbose: true
 }'''
 
 
@@ -39,7 +39,7 @@ def test_diff_values_position():
     file1_path = 'tests/fixtures/diff_values_pos1.json'
     file2_path = 'tests/fixtures/diff_values_pos2.json'
     assert generate_diff(file1_path, file2_path) == '''{
-    follow: False
+    follow: false
   - host: hexlet.io
   + host: yandex.ru
 }'''
