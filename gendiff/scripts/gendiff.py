@@ -4,7 +4,7 @@ import json
 import itertools
 
 
-def main():
+def get_argument():
     parser = argparse.ArgumentParser(
         description='Compares two configuration files and shows a difference.')
     parser.add_argument('first_file')
@@ -14,7 +14,11 @@ def main():
         '--format',
         help='set format of output'
     )
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    args = get_argument()
     diff = generate_diff(args.first_file, args.second_file)
     print(diff)
 
