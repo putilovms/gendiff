@@ -1,9 +1,11 @@
 from gendiff.scripts.gendiff import generate_diff
 
+PATH = 'tests/fixtures/yml/'
+
 
 def test_diff():
-    file1_path = 'tests/fixtures/diff1.json'
-    file2_path = 'tests/fixtures/diff2.json'
+    file1_path = PATH + 'diff1.yml'
+    file2_path = PATH + 'diff2.yml'
     assert generate_diff(file1_path, file2_path) == '''{
   - follow: false
   + verbose: true
@@ -11,8 +13,8 @@ def test_diff():
 
 
 def test_diff_values():
-    file1_path = 'tests/fixtures/diff_values1.json'
-    file2_path = 'tests/fixtures/diff_values2.json'
+    file1_path = PATH + 'diff_values1.yml'
+    file2_path = PATH + 'diff_values2.yml'
     assert generate_diff(file1_path, file2_path) == '''{
   - host: hexlet.io
   + host: yandex.ru
@@ -20,15 +22,15 @@ def test_diff_values():
 
 
 def test_equal():
-    file_path = 'tests/fixtures/equal.json'
+    file_path = PATH + 'equal.yml'
     assert generate_diff(file_path, file_path) == '''{
     host: hexlet.io
 }'''
 
 
 def test_add():
-    file1_path = 'tests/fixtures/add1.json'
-    file2_path = 'tests/fixtures/add2.json'
+    file1_path = PATH + 'add1.yml'
+    file2_path = PATH + 'add2.yml'
     assert generate_diff(file1_path, file2_path) == '''{
     host: hexlet.io
   + verbose: true
@@ -36,10 +38,18 @@ def test_add():
 
 
 def test_diff_values_position():
-    file1_path = 'tests/fixtures/diff_values_pos1.json'
-    file2_path = 'tests/fixtures/diff_values_pos2.json'
+    file1_path = PATH + 'diff_values_pos1.yml'
+    file2_path = PATH + 'diff_values_pos2.yml'
     assert generate_diff(file1_path, file2_path) == '''{
     follow: false
   - host: hexlet.io
   + host: yandex.ru
+}'''
+
+
+def test_extension():
+    file1_path = PATH + 'extension.yml'
+    file2_path = PATH + 'extension.yaml'
+    assert generate_diff(file1_path, file2_path) == '''{
+    host: hexlet.io
 }'''
