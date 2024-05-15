@@ -85,7 +85,8 @@ def format_value(v):
 def pre_stylish(tree):
     result = {}
     for k, v in tree.items():
-        if isinstance(v, list) and (isinstance(v[0], dict) or (isinstance(v[2], dict))):
+        if isinstance(v, list) and \
+                (isinstance(v[0], dict) or (isinstance(v[2], dict))):
             if v[1] == 'edit':
                 result[TAB['del'] + k] = pre_stylish(
                     tree[k][0]) if isinstance(v[0], dict) else tree[k][0]
