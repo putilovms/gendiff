@@ -7,3 +7,5 @@
 [![asciicast](https://asciinema.org/a/y883XzL7Hyb8cqRXrJXJ02CzI.svg)](https://asciinema.org/a/y883XzL7Hyb8cqRXrJXJ02CzI)
 ### Diff of flat files (YAML)
 [![asciicast](https://asciinema.org/a/l7EZhGtKDNHAqiVdstUjr2J6e.svg)](https://asciinema.org/a/l7EZhGtKDNHAqiVdstUjr2J6e)
+### Diff of deep files
+[![asciicast](https://asciinema.org/a/rjQGoPbh9FlFMIS2p20Gjgqap.svg)](https://asciinema.org/a/rjQGoPbh9FlFMIS2p20Gjgqap)
