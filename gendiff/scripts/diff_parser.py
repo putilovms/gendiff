@@ -1,8 +1,9 @@
 import json
 import os
 import yaml
-from gendiff.scripts.stylish import stylish
-from gendiff.scripts.plain import plain
+from gendiff.scripts.format_stylish import format_stylish
+from gendiff.scripts.format_plain import format_plain
+from gendiff.scripts.format_json import format_json
 
 
 def get_file(file_path):
@@ -74,10 +75,14 @@ def format_tree(ast_tree, format):
     result = []
     match format:
         case 'stylish':
-            result = stylish(ast_tree)
+            result = format_stylish(ast_tree)
+            return '\n'.join(result)
         case 'plain':
-            result = plain(ast_tree)
-    return '\n'.join(result)
+            result = format_plain(ast_tree)
+            return '\n'.join(result)
+        case 'json':
+            result = format_json(ast_tree)
+            return result
 
 
 def generate_diff(path1, path2, format='stylish'):

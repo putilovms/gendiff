@@ -1,4 +1,4 @@
-from gendiff.scripts.formatter import format_value
+from gendiff.scripts.format_lib import format_value
 
 
 def pre_stylish(tree):
@@ -26,7 +26,7 @@ def pre_stylish(tree):
     return result
 
 
-def stylish(ast_tree):
+def format_stylish(ast_tree):
     def walk(tree, acc, depth=0):
         R = '    '
         for k, v in tree.items():

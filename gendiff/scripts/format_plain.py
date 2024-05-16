@@ -1,4 +1,4 @@
-from gendiff.scripts.formatter import format_value
+from gendiff.scripts.format_lib import format_value
 
 
 def pre_plain(ast_tree):
@@ -16,7 +16,7 @@ def pre_plain(ast_tree):
     return result
 
 
-def plain(ast_tree):
+def format_plain(ast_tree):
     tree = pre_plain(ast_tree)
     result = []
     for k, v in tree.items():
