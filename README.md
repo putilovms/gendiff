@@ -11,3 +11,5 @@
 [![asciicast](https://asciinema.org/a/rjQGoPbh9FlFMIS2p20Gjgqap.svg)](https://asciinema.org/a/rjQGoPbh9FlFMIS2p20Gjgqap)
 ### Diff of deep files with plain style
 [![asciicast](https://asciinema.org/a/xHvBMNvqq0LXa5Lu1eIdzJiyw.svg)](https://asciinema.org/a/xHvBMNvqq0LXa5Lu1eIdzJiyw)
+### Diff of deep files with json style
+[![asciicast](https://asciinema.org/a/EgToweP5iXH1M11ZSdgqt5Riw.svg)](https://asciinema.org/a/EgToweP5iXH1M11ZSdgqt5Riw)
