@@ -56,6 +56,12 @@ def ast_tree(d1, d2, f1, f2):
 def get_ast_tree(path1, path2):
     file1 = get_file(path1)
     file2 = get_file(path2)
+
+    if not isinstance(file1, dict):
+        file1 = {'key': file1}
+    if not isinstance(file2, dict):
+        file2 = {'key': file2}
+
     diff1 = diff(file1, file2)
     diff2 = diff(file2, file1)
     result = ast_tree(diff1, diff2, file1, file2)

@@ -53,3 +53,11 @@ def test_extension():
     assert generate_diff(file1_path, file2_path) == '''{
     host: hexlet.io
 }'''
+
+
+# def test_only_value():
+#     file1_path = PATH + 'value1.yml'
+#     file2_path = PATH + 'value2.yaml'
+#     assert generate_diff(file1_path, file2_path) == '''{
+
+# }'''
