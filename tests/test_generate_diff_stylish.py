@@ -2,7 +2,7 @@ from gendiff.scripts.gendiff import generate_diff
 
 PATH = 'tests/fixtures/recursion/'
 
-result = '''{
+stylish = '''{
     common: {
       + follow: false
         setting1: Value 1
@@ -48,11 +48,10 @@ result = '''{
 }'''
 
 
-def test_diff_del_branch():
+def test_diff_del_branch_stylish():
     file1_path = PATH + 'edit_branch1.json'
     file2_path = PATH + 'edit_branch2.json'
-    assert generate_diff(file1_path, file2_path) == '''
-{
+    assert generate_diff(file1_path, file2_path) == '''{
     group1: {
       - nest: {
             deep: {
@@ -66,7 +65,8 @@ def test_diff_del_branch():
     }
 }'''
 
-def test_diff_del_branch():
+
+def test_diff_del_branch_stylish():
     file1_path = PATH + 'edit_branch2.json'
     file2_path = PATH + 'edit_branch1.json'
     assert generate_diff(file1_path, file2_path) == '''{
@@ -84,13 +84,13 @@ def test_diff_del_branch():
 }'''
 
 
-def test_diff_json():
+def test_diff_json_stylish():
     file1_path = PATH + 'file_r1.json'
     file2_path = PATH + 'file_r2.json'
-    assert generate_diff(file1_path, file2_path) == result
+    assert generate_diff(file1_path, file2_path) == stylish
 
 
-def test_diff_yml():
+def test_diff_yml_stylish():
     file1_path = PATH + 'file_r1.yml'
     file2_path = PATH + 'file_r2.yml'
-    assert generate_diff(file1_path, file2_path) == result
+    assert generate_diff(file1_path, file2_path) == stylish

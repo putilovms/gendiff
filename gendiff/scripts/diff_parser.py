@@ -1,10 +1,8 @@
 import json
-import itertools
 import os
 import yaml
-
-TAB = {'equal': '  ', 'del': '- ', 'add': '+ ', 'unform': '  '}
-R = '    '
+from gendiff.scripts.stylish import stylish
+from gendiff.scripts.plain import plain
 
 
 def get_file(file_path):
@@ -72,60 +70,14 @@ def sort_tree(tree):
     return tree
 
 
-def format_value(v):
-    if isinstance(v, bool):
-        result = str(v).lower()
-    elif v is None:
-        result = 'null'
-    else:
-        result = str(v)
-    return result
-
-
-def pre_stylish(tree):
-    result = {}
-    for k, v in tree.items():
-        if isinstance(v, list) and \
-                (isinstance(v[0], dict) or (isinstance(v[2], dict))):
-            if v[1] == 'edit':
-                result[TAB['del'] + k] = pre_stylish(
-                    tree[k][0]) if isinstance(v[0], dict) else tree[k][0]
-                result[TAB['add'] + k] = pre_stylish(
-                    tree[k][2]) if isinstance(v[2], dict) else tree[k][2]
-            else:
-                result[TAB[v[1]] + k] = pre_stylish(tree[k][0])
-        elif isinstance(v, list):
-            if v[1] == 'edit':
-                result[TAB['del'] + k] = tree[k][0]
-                result[TAB['add'] + k] = tree[k][2]
-            else:
-                result[TAB[v[1]] + k] = tree[k][0]
-        else:
-            result[TAB['unform'] + k] = pre_stylish(
-                tree[k]) if isinstance(v, dict) else tree[k]
-    return result
-
-
-def stylish(tree, acc, depth=0):
-    for k, v in tree.items():
-        r = (R * (depth + 1))
-        if isinstance(v, dict):
-            acc.append(r[:-2] + k + ': {')
-            stylish(v, acc, depth + 1)
-            acc.append(r + '}')
-        else:
-            acc.append(r[:-2] + k + ': ' + format_value(v))
-
-
 def format_tree(ast_tree, format):
     result = []
     match format:
         case 'stylish':
-            tree = pre_stylish(ast_tree)
-            stylish(tree, result)
-            result = itertools.chain("{", result, "}")
-            result = '\n'.join(result)
-    return result
+            result = stylish(ast_tree)
+        case 'plain':
+            result = plain(ast_tree)
+    return '\n'.join(result)
 
 
 def generate_diff(path1, path2, format='stylish'):
