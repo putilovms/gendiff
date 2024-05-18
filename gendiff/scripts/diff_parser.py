@@ -61,8 +61,6 @@ def get_ast_tree(path1, path2):
     file2 = get_file(path2)
     diff1 = diff(file1, file2)
     diff2 = diff(file2, file1)
-    print(json.dumps(diff1, indent=4))
-    print(json.dumps(diff2, indent=4))
     result = ast_tree(diff1, diff2, file1, file2)
     result = sort_tree(result)
     return result
