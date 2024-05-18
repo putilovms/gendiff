@@ -48,7 +48,7 @@ stylish = '''{
 }'''
 
 
-def test_diff_del_branch_stylish():
+def test_diff_del_branch_first_stylish():
     file1_path = PATH + 'edit_branch1.json'
     file2_path = PATH + 'edit_branch2.json'
     assert generate_diff(file1_path, file2_path) == '''{
@@ -66,7 +66,7 @@ def test_diff_del_branch_stylish():
 }'''
 
 
-def test_diff_del_branch_stylish():
+def test_diff_del_branch_second_stylish():
     file1_path = PATH + 'edit_branch2.json'
     file2_path = PATH + 'edit_branch1.json'
     assert generate_diff(file1_path, file2_path) == '''{
