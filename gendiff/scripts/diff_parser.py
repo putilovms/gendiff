@@ -22,7 +22,10 @@ def diff(a, b):
     result = {}
     for k, v in a.items():
         if isinstance(v, dict):
-            result[k] = diff(v, b[k]) if k in b else v
+            if (k in b) and isinstance(b[k], dict):
+                result[k] = diff(v, b[k])
+            else:
+                result[k] = v
         else:
             if (k not in b) or (k in b and b[k] != v):
                 result[k] = v
@@ -56,14 +59,10 @@ def ast_tree(d1, d2, f1, f2):
 def get_ast_tree(path1, path2):
     file1 = get_file(path1)
     file2 = get_file(path2)
-
-    if not isinstance(file1, dict):
-        file1 = {'key': file1}
-    if not isinstance(file2, dict):
-        file2 = {'key': file2}
-
     diff1 = diff(file1, file2)
     diff2 = diff(file2, file1)
+    print(json.dumps(diff1, indent=4))
+    print(json.dumps(diff2, indent=4))
     result = ast_tree(diff1, diff2, file1, file2)
     result = sort_tree(result)
     return result
