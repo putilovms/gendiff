@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
-from gendiff.format.diff_parser import generate_diff
+from gendiff.ast_generator import get_ast_tree
+from gendiff.formatter import format_tree
 
 
 def get_argument():
@@ -15,6 +16,13 @@ def get_argument():
         help='set format of output'
     )
     return parser.parse_args()
+
+
+def generate_diff(path1, path2, format='stylish'):
+    tree = get_ast_tree(path1, path2)
+    # print(json.dumps(tree, indent=4))
+    result = format_tree(tree, format)
+    return result
 
 
 def main():

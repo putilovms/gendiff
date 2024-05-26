@@ -1,4 +1,4 @@
-from gendiff.format.format_lib import format_value
+from gendiff.normalizer import normalize_value
 
 
 def pre_plain(ast_tree):
@@ -25,13 +25,13 @@ def format_plain(ast_tree):
                 result.append(f"Property '{k}' was removed")
             case 'add':
                 s = '[complex value]' if isinstance(
-                    v[0], dict) else format_value(v[0], True)
+                    v[0], dict) else normalize_value(v[0], True)
                 result.append(f"Property '{k}' was added with value: {s}")
             case 'edit':
                 s1 = '[complex value]' if isinstance(
-                    v[0], dict) else format_value(v[0], True)
+                    v[0], dict) else normalize_value(v[0], True)
                 s2 = '[complex value]' if isinstance(
-                    v[2], dict) else format_value(v[2], True)
+                    v[2], dict) else normalize_value(v[2], True)
                 result.append(f"Property '{k}' was updated. From {s1} to {s2}")
     # print(json.dumps(result, indent=4))
     return result

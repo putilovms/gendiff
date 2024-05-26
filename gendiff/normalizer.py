@@ -1,4 +1,4 @@
-def format_value(v, quoted=False):
+def normalize_value(v, quoted=False):
     if isinstance(v, bool):
         return str(v).lower()
     elif v is None:

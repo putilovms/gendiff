@@ -1,4 +1,4 @@
-from gendiff.format.format_lib import format_value
+from gendiff.normalizer import normalize_value
 
 
 def pre_stylish(tree):
@@ -36,7 +36,7 @@ def format_stylish(ast_tree):
                 walk(v, acc, depth + 1)
                 acc.append(r + '}')
             else:
-                acc.append(r[:-2] + k + ': ' + format_value(v))
+                acc.append(r[:-2] + k + ': ' + normalize_value(v))
     result = []
     result.append("{")
     walk(pre_stylish(ast_tree), result)

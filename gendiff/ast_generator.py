@@ -1,21 +1,5 @@
-import json
-import os
-import yaml
-from gendiff.format.format_stylish import format_stylish
-from gendiff.format.format_plain import format_plain
-from gendiff.format.format_json import format_json
-
-
-def get_file(file_path):
-    with open(file_path, 'r') as f:
-        _, ext = os.path.splitext(file_path)
-        match ext:
-            case '.yml' | '.yaml':
-                return yaml.load(f, Loader=yaml.FullLoader)
-            case '.json':
-                return json.load(f)
-            case _:
-                raise ValueError(f"This extension is not supported - {ext}")
+from gendiff.parser import parse
+from gendiff.loader import get_content
 
 
 def diff(a, b):
@@ -57,8 +41,8 @@ def ast_tree(d1, d2, f1, f2):
 
 
 def get_ast_tree(path1, path2):
-    file1 = get_file(path1)
-    file2 = get_file(path2)
+    file1 = parse(*get_content(path1))
+    file2 = parse(*get_content(path2))
     diff1 = diff(file1, file2)
     diff2 = diff(file2, file1)
     result = ast_tree(diff1, diff2, file1, file2)
@@ -72,24 +56,3 @@ def sort_tree(tree):
         if isinstance(v, list) and isinstance(v[0], dict):
             tree[k][0] = sort_tree(v[0])
     return tree
-
-
-def format_tree(ast_tree, format):
-    result = []
-    match format:
-        case 'stylish':
-            result = format_stylish(ast_tree)
-            return '\n'.join(result)
-        case 'plain':
-            result = format_plain(ast_tree)
-            return '\n'.join(result)
-        case 'json':
-            result = format_json(ast_tree)
-            return result
-
-
-def generate_diff(path1, path2, format='stylish'):
-    tree = get_ast_tree(path1, path2)
-    # print(json.dumps(tree, indent=4))
-    result = format_tree(tree, format)
-    return result
