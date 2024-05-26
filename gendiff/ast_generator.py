@@ -1,5 +1,6 @@
 from gendiff.parser import parse
 from gendiff.loader import get_content
+import gendiff.constants as const
 
 
 def diff(a, b):
@@ -21,23 +22,31 @@ def ast_tree(d1, d2, f1, f2):
     for k, v in f1.items():
         match (k in d1, k in d2):
             case(True, False):
-                result[k] = [v, 'del', None]
+                result[k] = [v, const.DEL, None]
             case(True, True):
                 if isinstance(v, dict) and isinstance(f2[k], dict):
                     result[k] = [
-                        ast_tree(d1[k], d2[k], f1[k], f2[k]), 'equal', None]
+                        ast_tree(d1[k], d2[k], f1[k], f2[k]), const.EQUAL, None]
                 else:
-                    result[k] = [v, 'edit', f2[k]]
+                    result[k] = [v, const.EDIT, f2[k]]
             case(False, False):
                 if isinstance(v, dict):
                     result[k] = [
-                        ast_tree(d1[k], d2[k], f1[k], f2[k]), 'equal', None]
+                        ast_tree(d1[k], d2[k], f1[k], f2[k]), const.EQUAL, None]
                 else:
-                    result[k] = [v, 'equal', None]
+                    result[k] = [v, const.EQUAL, None]
     for k, v in d2.items():
         if k not in f1:
-            result[k] = [v, 'add', None]
+            result[k] = [v, const.ADD, None]
     return result
+
+
+def sort_tree(tree):
+    tree = dict(sorted(tree.items()))
+    for k, v in tree.items():
+        if isinstance(v, list) and isinstance(v[0], dict):
+            tree[k][0] = sort_tree(v[0])
+    return tree
 
 
 def get_ast_tree(path1, path2):
@@ -48,11 +57,3 @@ def get_ast_tree(path1, path2):
     result = ast_tree(diff1, diff2, file1, file2)
     result = sort_tree(result)
     return result
-
-
-def sort_tree(tree):
-    tree = dict(sorted(tree.items()))
-    for k, v in tree.items():
-        if isinstance(v, list) and isinstance(v[0], dict):
-            tree[k][0] = sort_tree(v[0])
-    return tree

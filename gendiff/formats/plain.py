@@ -1,4 +1,5 @@
 from gendiff.normalizer import normalize_value
+import gendiff.constants as const
 
 
 def pre_plain(ast_tree):
@@ -21,13 +22,13 @@ def format_plain(ast_tree):
     result = []
     for k, v in tree.items():
         match v[1]:
-            case 'del':
+            case const.DEL:
                 result.append(f"Property '{k}' was removed")
-            case 'add':
+            case const.ADD:
                 s = '[complex value]' if isinstance(
                     v[0], dict) else normalize_value(v[0], True)
                 result.append(f"Property '{k}' was added with value: {s}")
-            case 'edit':
+            case const.EDIT:
                 s1 = '[complex value]' if isinstance(
                     v[0], dict) else normalize_value(v[0], True)
                 s2 = '[complex value]' if isinstance(
