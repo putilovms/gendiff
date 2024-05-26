@@ -1,9 +1,9 @@
 import json
 import os
 import yaml
-from gendiff.scripts.format_stylish import format_stylish
-from gendiff.scripts.format_plain import format_plain
-from gendiff.scripts.format_json import format_json
+from gendiff.format.format_stylish import format_stylish
+from gendiff.format.format_plain import format_plain
+from gendiff.format.format_json import format_json
 
 
 def get_file(file_path):

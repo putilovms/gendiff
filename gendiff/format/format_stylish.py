@@ -1,4 +1,4 @@
-from gendiff.scripts.format_lib import format_value
+from gendiff.format.format_lib import format_value
 
 
 def pre_stylish(tree):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-from gendiff.scripts.diff_parser import generate_diff
+from gendiff.format.diff_parser import generate_diff
 
 
 def get_argument():
