@@ -15,30 +15,37 @@ def diff(a, b):
     return result
 
 
-def ast_tree(d1, d2, f1, f2):
-    result = {}
-    for k, v in f1.items():
-        match (k in d1, k in d2):
-            case(True, False):
-                result[k] = {'status': const.DEL, 'format': False, 'value': v}
-            case(True, True):
-                if isinstance(v, dict) and isinstance(f2[k], dict):
-                    result[k] = {'status': const.EQUAL, 'format': True,
-                                 'value': ast_tree(d1[k], d2[k], f1[k], f2[k])}
-                else:
-                    result[k] = {'status': const.EDIT,
-                                 'format': False, 'value': v, 'old': f2[k]}
-            case(False, False):
-                if isinstance(v, dict):
-                    result[k] = {'status': const.EQUAL, 'format': True,
-                                 'value': ast_tree(d1[k], d2[k], f1[k], f2[k])}
-                else:
-                    result[k] = {'status': const.EQUAL,
+def ast_tree(dict1, dict2):
+    def walk(dict1, dict2, diff1, diff2):
+        result = {}
+        for k, v in dict1.items():
+            match (k in diff1, k in diff2):
+                case(True, False):
+                    result[k] = {'status': const.DEL,
                                  'format': False, 'value': v}
-    for k, v in d2.items():
-        if k not in f1:
-            result[k] = {'status': const.ADD, 'format': False, 'value': v}
-    return result
+                case(True, True):
+                    if isinstance(v, dict) and isinstance(dict2[k], dict):
+                        result[k] = {'status': const.EQUAL, 'format': True,
+                                     'value': walk(dict1[k], dict2[k],
+                                                   diff1[k], diff2[k])}
+                    else:
+                        result[k] = {'status': const.EDIT,
+                                     'format': False, 'value': v, 'old': dict2[k]}
+                case(False, False):
+                    if isinstance(v, dict):
+                        result[k] = {'status': const.EQUAL, 'format': True,
+                                     'value': walk(dict1[k], dict2[k],
+                                                   diff1[k], diff2[k])}
+                    else:
+                        result[k] = {'status': const.EQUAL,
+                                     'format': False, 'value': v}
+        for k, v in diff2.items():
+            if k not in dict1:
+                result[k] = {'status': const.ADD, 'format': False, 'value': v}
+        return result
+    diff1 = diff(dict1, dict2)
+    diff2 = diff(dict2, dict1)
+    return walk(dict1, dict2, diff1, diff2)
 
 
 def sort_tree(tree):
@@ -50,8 +57,6 @@ def sort_tree(tree):
 
 
 def get_ast_tree(dict1, dict2):
-    diff1 = diff(dict1, dict2)
-    diff2 = diff(dict2, dict1)
-    result = ast_tree(diff1, diff2, dict1, dict2)
+    result = ast_tree(dict1, dict2)
     result = sort_tree(result)
     return result
