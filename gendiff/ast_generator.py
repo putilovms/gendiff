@@ -1,51 +1,48 @@
 import gendiff.constants as const
+import copy
 
 
-def diff(a, b):
-    result = {}
-    for k, v in a.items():
-        if isinstance(v, dict):
-            if (k in b) and isinstance(b[k], dict):
-                result[k] = diff(v, b[k])
-            else:
-                result[k] = v
+def deep_merge(dict1, dict2):
+    for key in dict2:
+        if key in dict1:
+            if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+                deep_merge(dict1[key], dict2[key])
+            elif dict1[key] != dict2[key]:
+                dict1[key] = [dict1[key], dict2[key]]
         else:
-            if (k not in b) or (k in b and b[k] != v):
-                result[k] = v
-    return result
+            dict1[key] = dict2[key]
+    return dict1
 
 
 def ast_tree(dict1, dict2):
-    def walk(dict1, dict2, diff1, diff2):
+    def walk(merge_dict, dict1, dict2):
         result = {}
-        for k, v in dict1.items():
-            match (k in diff1, k in diff2):
-                case(True, False):
-                    result[k] = {'status': const.DEL,
-                                 'format': False, 'value': v}
-                case(True, True):
-                    if isinstance(v, dict) and isinstance(dict2[k], dict):
-                        result[k] = {'status': const.EQUAL, 'format': True,
-                                     'value': walk(dict1[k], dict2[k],
-                                                   diff1[k], diff2[k])}
-                    else:
-                        result[k] = {'status': const.EDIT, 'format': False,
-                                     'value': v, 'old': dict2[k]}
-                case(False, False):
-                    if isinstance(v, dict):
-                        result[k] = {'status': const.EQUAL, 'format': True,
-                                     'value': walk(dict1[k], dict2[k],
-                                                   diff1[k], diff2[k])}
-                    else:
-                        result[k] = {'status': const.EQUAL,
-                                     'format': False, 'value': v}
-        for k, v in diff2.items():
-            if k not in dict1:
-                result[k] = {'status': const.ADD, 'format': False, 'value': v}
+        keys1 = set(dict1.keys())
+        keys2 = set(dict2.keys())
+        delete = keys1 - keys2
+        for k in delete:
+            result[k] = {'status': const.DEL,
+                         'format': False, 'value': merge_dict[k]}
+        add = keys2 - keys1
+        for k in add:
+            result[k] = {'status': const.ADD,
+                         'format': False, 'value': merge_dict[k]}
+        equal = keys1 & keys2
+        for k in equal:
+            if isinstance(merge_dict[k], dict):
+                result[k] = {'status': const.EQUAL,
+                             'format': True, 'value': walk(merge_dict[k], dict1[k], dict2[k])}
+            elif isinstance(merge_dict[k], list):
+                result[k] = {'status': const.EDIT,
+                             'format': False, 'value': merge_dict[k][0], 'old': merge_dict[k][1]}
+            else:
+                result[k] = {'status': const.EQUAL,
+                             'format': False, 'value': merge_dict[k]}
+
         return result
-    diff1 = diff(dict1, dict2)
-    diff2 = diff(dict2, dict1)
-    return walk(dict1, dict2, diff1, diff2)
+    merge_dict = copy.deepcopy(dict1)
+    deep_merge(merge_dict, dict2)
+    return walk(merge_dict, dict1, dict2)
 
 
 def sort_tree(tree):
