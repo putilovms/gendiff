@@ -6,10 +6,10 @@ def pre_plain(ast_tree):
     def walk(tree, acc, path=''):
         for k, v in tree.items():
             p = (path + '.' + k).strip('.')
-            if isinstance(v, list):
-                if isinstance(v[0], dict):
+            if isinstance(v, dict):
+                if v['format']:
                     acc[p] = v
-                    walk(tree[k][0], acc, p)
+                    walk(v['value'], acc, p)
                 else:
                     acc[p] = v
     result = {}
@@ -21,18 +21,17 @@ def format_plain(ast_tree):
     tree = pre_plain(ast_tree)
     result = []
     for k, v in tree.items():
-        match v[1]:
+        match v['status']:
             case const.DEL:
                 result.append(f"Property '{k}' was removed")
             case const.ADD:
                 s = '[complex value]' if isinstance(
-                    v[0], dict) else normalize_value(v[0], True)
+                    v['value'], dict) else normalize_value(v['value'], True)
                 result.append(f"Property '{k}' was added with value: {s}")
             case const.EDIT:
                 s1 = '[complex value]' if isinstance(
-                    v[0], dict) else normalize_value(v[0], True)
+                    v['value'], dict) else normalize_value(v['value'], True)
                 s2 = '[complex value]' if isinstance(
-                    v[2], dict) else normalize_value(v[2], True)
+                    v['old'], dict) else normalize_value(v['old'], True)
                 result.append(f"Property '{k}' was updated. From {s1} to {s2}")
-    # print(json.dumps(result, indent=4))
     return result

@@ -6,25 +6,27 @@ def pre_stylish(tree):
     TAB = {const.EQUAL: '  ', const.DEL: '- ',
            const.ADD: '+ ', const.UNFORM: '  '}
     result = {}
+
     for k, v in tree.items():
-        if isinstance(v, list) and \
-                (isinstance(v[0], dict) or (isinstance(v[2], dict))):
-            if v[1] == const.EDIT:
+        if isinstance(v, dict) and ('format' in v) \
+                and (isinstance(v['value'], dict)
+                     or isinstance(v.get('old'), dict)):
+            if v['status'] == const.EDIT:
                 result[TAB[const.DEL] + k] = pre_stylish(
-                    tree[k][0]) if isinstance(v[0], dict) else tree[k][0]
+                    v['value']) if isinstance(v['value'], dict) else v['value']
                 result[TAB[const.ADD] + k] = pre_stylish(
-                    tree[k][2]) if isinstance(v[2], dict) else tree[k][2]
+                    v['old']) if isinstance(v['old'], dict) else v['old']
             else:
-                result[TAB[v[1]] + k] = pre_stylish(tree[k][0])
-        elif isinstance(v, list):
-            if v[1] == const.EDIT:
-                result[TAB[const.DEL] + k] = tree[k][0]
-                result[TAB[const.ADD] + k] = tree[k][2]
+                result[TAB[v['status']] + k] = pre_stylish(v['value'])
+        elif isinstance(v, dict) and ('format' in v):
+            if v['status'] == const.EDIT:
+                result[TAB[const.DEL] + k] = v['value']
+                result[TAB[const.ADD] + k] = v['old']
             else:
-                result[TAB[v[1]] + k] = tree[k][0]
+                result[TAB[v['status']] + k] = v['value']
         else:
             result[TAB[const.UNFORM] + k] = pre_stylish(
-                tree[k]) if isinstance(v, dict) else tree[k]
+                v) if isinstance(v, dict) else v
     return result
 
 

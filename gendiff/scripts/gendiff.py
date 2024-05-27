@@ -2,6 +2,8 @@
 import argparse
 from gendiff.ast_generator import get_ast_tree
 from gendiff.formatter import format_tree
+from gendiff.loader import get_content
+from gendiff.parser import parse
 
 
 def get_argument():
@@ -19,8 +21,13 @@ def get_argument():
 
 
 def generate_diff(path1, path2, format='stylish'):
-    tree = get_ast_tree(path1, path2)
+    dict1 = parse(*get_content(path1))
+    dict2 = parse(*get_content(path2))
+    tree = get_ast_tree(dict1, dict2)
+
+    # import json
     # print(json.dumps(tree, indent=4))
+
     result = format_tree(tree, format)
     return result
 

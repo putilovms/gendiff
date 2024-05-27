@@ -1,5 +1,3 @@
-from gendiff.parser import parse
-from gendiff.loader import get_content
 import gendiff.constants as const
 
 
@@ -22,38 +20,38 @@ def ast_tree(d1, d2, f1, f2):
     for k, v in f1.items():
         match (k in d1, k in d2):
             case(True, False):
-                result[k] = [v, const.DEL, None]
+                result[k] = {'status': const.DEL, 'format': False, 'value': v}
             case(True, True):
                 if isinstance(v, dict) and isinstance(f2[k], dict):
-                    result[k] = [
-                        ast_tree(d1[k], d2[k], f1[k], f2[k]), const.EQUAL, None]
+                    result[k] = {'status': const.EQUAL, 'format': True,
+                                 'value': ast_tree(d1[k], d2[k], f1[k], f2[k])}
                 else:
-                    result[k] = [v, const.EDIT, f2[k]]
+                    result[k] = {'status': const.EDIT,
+                                 'format': False, 'value': v, 'old': f2[k]}
             case(False, False):
                 if isinstance(v, dict):
-                    result[k] = [
-                        ast_tree(d1[k], d2[k], f1[k], f2[k]), const.EQUAL, None]
+                    result[k] = {'status': const.EQUAL, 'format': True,
+                                 'value': ast_tree(d1[k], d2[k], f1[k], f2[k])}
                 else:
-                    result[k] = [v, const.EQUAL, None]
+                    result[k] = {'status': const.EQUAL,
+                                 'format': False, 'value': v}
     for k, v in d2.items():
         if k not in f1:
-            result[k] = [v, const.ADD, None]
+            result[k] = {'status': const.ADD, 'format': False, 'value': v}
     return result
 
 
 def sort_tree(tree):
     tree = dict(sorted(tree.items()))
-    for k, v in tree.items():
-        if isinstance(v, list) and isinstance(v[0], dict):
-            tree[k][0] = sort_tree(v[0])
+    for v in tree.values():
+        if isinstance(v, dict) and isinstance(v.get('value'), dict):
+            v['value'] = sort_tree(v['value'])
     return tree
 
 
-def get_ast_tree(path1, path2):
-    file1 = parse(*get_content(path1))
-    file2 = parse(*get_content(path2))
-    diff1 = diff(file1, file2)
-    diff2 = diff(file2, file1)
-    result = ast_tree(diff1, diff2, file1, file2)
+def get_ast_tree(dict1, dict2):
+    diff1 = diff(dict1, dict2)
+    diff2 = diff(dict2, dict1)
+    result = ast_tree(diff1, diff2, dict1, dict2)
     result = sort_tree(result)
     return result
