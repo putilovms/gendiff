@@ -14,32 +14,45 @@ def deep_merge(dict1, dict2):
     return dict1
 
 
+def set_del_node(tree, delete, merge_dict):
+    for k in delete:
+        tree[k] = {'status': const.DEL,
+                   'format': False, 'value': merge_dict[k]}
+
+
+def set_add_node(tree, add, merge_dict):
+    for k in add:
+        tree[k] = {'status': const.ADD,
+                   'format': False, 'value': merge_dict[k]}
+
+
+def set_edit_node(tree, edit, merge_dict):
+    for k in edit:
+        if isinstance(merge_dict[k], list):
+            tree[k] = {'status': const.EDIT, 'format': False,
+                       'value': merge_dict[k][0], 'old': merge_dict[k][1]}
+
+
 def ast_tree(dict1, dict2):
     def walk(merge_dict, dict1, dict2):
         result = {}
         keys1 = set(dict1.keys())
         keys2 = set(dict2.keys())
         delete = keys1 - keys2
-        for k in delete:
-            result[k] = {'status': const.DEL,
-                         'format': False, 'value': merge_dict[k]}
+        set_del_node(result, delete, merge_dict)
         add = keys2 - keys1
-        for k in add:
-            result[k] = {'status': const.ADD,
-                         'format': False, 'value': merge_dict[k]}
+        set_add_node(result, add, merge_dict)
         equal = keys1 & keys2
+        set_edit_node(result, equal, merge_dict)
         for k in equal:
             if isinstance(merge_dict[k], dict):
-                result[k] = {'status': const.EQUAL,
-                             'format': True, 'value': walk(merge_dict[k], dict1[k], dict2[k])}
-            elif isinstance(merge_dict[k], list):
-                result[k] = {'status': const.EDIT,
-                             'format': False, 'value': merge_dict[k][0], 'old': merge_dict[k][1]}
-            else:
+                result[k] = {'status': const.EQUAL, 'format': True,
+                             'value': walk(merge_dict[k], dict1[k], dict2[k])}
+            elif not isinstance(merge_dict[k], list):
                 result[k] = {'status': const.EQUAL,
                              'format': False, 'value': merge_dict[k]}
-
         return result
+
     merge_dict = copy.deepcopy(dict1)
     deep_merge(merge_dict, dict2)
     return walk(merge_dict, dict1, dict2)
