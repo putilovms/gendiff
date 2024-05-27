@@ -29,8 +29,8 @@ def ast_tree(dict1, dict2):
                                      'value': walk(dict1[k], dict2[k],
                                                    diff1[k], diff2[k])}
                     else:
-                        result[k] = {'status': const.EDIT,
-                                     'format': False, 'value': v, 'old': dict2[k]}
+                        result[k] = {'status': const.EDIT, 'format': False,
+                                     'value': v, 'old': dict2[k]}
                 case(False, False):
                     if isinstance(v, dict):
                         result[k] = {'status': const.EQUAL, 'format': True,
