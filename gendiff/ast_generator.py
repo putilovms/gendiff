@@ -44,12 +44,11 @@ def set_equal_node(equal, merge_dict, dict1, dict2):
     for k in equal:
         if isinstance(merge_dict[k], dict):
             result[k] = {'status': const.EQUAL, 'format': True,
-                       'value': ast_tree(merge_dict[k], dict1[k], dict2[k])}
+                         'value': ast_tree(merge_dict[k], dict1[k], dict2[k])}
         elif not isinstance(merge_dict[k], list):
             result[k] = {'status': const.EQUAL,
-                       'format': False, 'value': merge_dict[k]}
+                         'format': False, 'value': merge_dict[k]}
     return result
-
 
 
 def ast_tree(merge_dict, dict1, dict2):
