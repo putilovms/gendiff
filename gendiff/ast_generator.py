@@ -33,29 +33,28 @@ def set_edit_node(tree, edit, merge_dict):
                        'value': merge_dict[k][0], 'old': merge_dict[k][1]}
 
 
-def ast_tree(dict1, dict2):
-    def walk(merge_dict, dict1, dict2):
-        result = {}
-        keys1 = set(dict1.keys())
-        keys2 = set(dict2.keys())
-        delete = keys1 - keys2
-        set_del_node(result, delete, merge_dict)
-        add = keys2 - keys1
-        set_add_node(result, add, merge_dict)
-        equal = keys1 & keys2
-        set_edit_node(result, equal, merge_dict)
-        for k in equal:
-            if isinstance(merge_dict[k], dict):
-                result[k] = {'status': const.EQUAL, 'format': True,
-                             'value': walk(merge_dict[k], dict1[k], dict2[k])}
-            elif not isinstance(merge_dict[k], list):
-                result[k] = {'status': const.EQUAL,
-                             'format': False, 'value': merge_dict[k]}
-        return result
+def set_equal_node(tree, equal, merge_dict, dict1, dict2):
+    for k in equal:
+        if isinstance(merge_dict[k], dict):
+            tree[k] = {'status': const.EQUAL, 'format': True,
+                       'value': ast_tree(merge_dict[k], dict1[k], dict2[k])}
+        elif not isinstance(merge_dict[k], list):
+            tree[k] = {'status': const.EQUAL,
+                       'format': False, 'value': merge_dict[k]}
 
-    merge_dict = copy.deepcopy(dict1)
-    deep_merge(merge_dict, dict2)
-    return walk(merge_dict, dict1, dict2)
+
+def ast_tree(merge_dict, dict1, dict2):
+    result = {}
+    keys1 = set(dict1.keys())
+    keys2 = set(dict2.keys())
+    delete = keys1 - keys2
+    set_del_node(result, delete, merge_dict)
+    add = keys2 - keys1
+    set_add_node(result, add, merge_dict)
+    equal = keys1 & keys2
+    set_edit_node(result, equal, merge_dict)
+    set_equal_node(result, equal, merge_dict, dict1, dict2)
+    return result
 
 
 def sort_tree(tree):
@@ -67,6 +66,8 @@ def sort_tree(tree):
 
 
 def get_ast_tree(dict1, dict2):
-    result = ast_tree(dict1, dict2)
+    merge_dict = copy.deepcopy(dict1)
+    deep_merge(merge_dict, dict2)
+    result = ast_tree(merge_dict, dict1, dict2)
     result = sort_tree(result)
     return result
