@@ -6,13 +6,19 @@ TAB = {const.EQUAL: '  ', const.DEL: '- ',
        const.ADD: '+ ', const.UNFORM: '  '}
 
 
+def get_deep_edit_node(k, v):
+    result = {}
+    result[TAB[const.DEL] + k] = pre_stylish(
+        v['value']) if isinstance(v['value'], dict) else v['value']
+    result[TAB[const.ADD] + k] = pre_stylish(
+        v['old']) if isinstance(v['old'], dict) else v['old']
+    return result
+
+
 def get_deep_formated_node(k, v):
     result = {}
     if v['status'] == const.EDIT:
-        result[TAB[const.DEL] + k] = pre_stylish(
-            v['value']) if isinstance(v['value'], dict) else v['value']
-        result[TAB[const.ADD] + k] = pre_stylish(
-            v['old']) if isinstance(v['old'], dict) else v['old']
+        result.update(get_deep_edit_node(k, v))
     else:
         result[TAB[v['status']] + k] = pre_stylish(v['value'])
     return result
