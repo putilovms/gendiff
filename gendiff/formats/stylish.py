@@ -2,31 +2,50 @@ from gendiff.normalizer import normalize_value
 import gendiff.constants as const
 
 
-def pre_stylish(tree):
-    TAB = {const.EQUAL: '  ', const.DEL: '- ',
-           const.ADD: '+ ', const.UNFORM: '  '}
-    result = {}
+TAB = {const.EQUAL: '  ', const.DEL: '- ',
+       const.ADD: '+ ', const.UNFORM: '  '}
 
+
+def get_deep_formated_node(k, v):
+    result = {}
+    if v['status'] == const.EDIT:
+        result[TAB[const.DEL] + k] = pre_stylish(
+            v['value']) if isinstance(v['value'], dict) else v['value']
+        result[TAB[const.ADD] + k] = pre_stylish(
+            v['old']) if isinstance(v['old'], dict) else v['old']
+    else:
+        result[TAB[v['status']] + k] = pre_stylish(v['value'])
+    return result
+
+
+def get_plain_formated_node(k, v):
+    result = {}
+    if v['status'] == const.EDIT:
+        result[TAB[const.DEL] + k] = v['value']
+        result[TAB[const.ADD] + k] = v['old']
+    else:
+        result[TAB[v['status']] + k] = v['value']
+    return result
+
+
+def get_not_formated_node(k, v):
+    result = {}
+    result[TAB[const.UNFORM] + k] = pre_stylish(
+        v) if isinstance(v, dict) else v
+    return result
+
+
+def pre_stylish(tree):
+    result = {}
     for k, v in tree.items():
         if isinstance(v, dict) and ('format' in v) \
                 and (isinstance(v['value'], dict)
                      or isinstance(v.get('old'), dict)):
-            if v['status'] == const.EDIT:
-                result[TAB[const.DEL] + k] = pre_stylish(
-                    v['value']) if isinstance(v['value'], dict) else v['value']
-                result[TAB[const.ADD] + k] = pre_stylish(
-                    v['old']) if isinstance(v['old'], dict) else v['old']
-            else:
-                result[TAB[v['status']] + k] = pre_stylish(v['value'])
+            result.update(get_deep_formated_node(k, v))
         elif isinstance(v, dict) and ('format' in v):
-            if v['status'] == const.EDIT:
-                result[TAB[const.DEL] + k] = v['value']
-                result[TAB[const.ADD] + k] = v['old']
-            else:
-                result[TAB[v['status']] + k] = v['value']
+            result.update(get_plain_formated_node(k, v))
         else:
-            result[TAB[const.UNFORM] + k] = pre_stylish(
-                v) if isinstance(v, dict) else v
+            result.update(get_not_formated_node(k, v))
     return result
 
 
