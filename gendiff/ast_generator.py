@@ -14,18 +14,10 @@ def deep_merge(dict1, dict2):
     return dict1
 
 
-def set_del_node(delete, merge_dict):
+def set_node(type, deff_set, merge_dict):
     result = {}
-    for k in delete:
-        result[k] = {'status': const.DEL,
-                     'format': False, 'value': merge_dict[k]}
-    return result
-
-
-def set_add_node(add, merge_dict):
-    result = {}
-    for k in add:
-        result[k] = {'status': const.ADD,
+    for k in deff_set:
+        result[k] = {'status': type,
                      'format': False, 'value': merge_dict[k]}
     return result
 
@@ -56,9 +48,9 @@ def ast_tree(merge_dict, dict1, dict2):
     keys1 = set(dict1.keys())
     keys2 = set(dict2.keys())
     delete = keys1 - keys2
-    result.update(set_del_node(delete, merge_dict))
+    result.update(set_node(const.DEL, delete, merge_dict))
     add = keys2 - keys1
-    result.update(set_add_node(add, merge_dict))
+    result.update(set_node(const.ADD, add, merge_dict))
     equal = keys1 & keys2
     result.update(set_edit_node(equal, merge_dict))
     result.update(set_equal_node(equal, merge_dict, dict1, dict2))
