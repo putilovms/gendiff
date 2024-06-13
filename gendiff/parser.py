@@ -9,7 +9,7 @@ def parse(content, type):
             try:
                 data = yaml.safe_load(content)
             except yaml.YAMLError as e:
-                print ("Invalid YAML syntax:", e)
+                print("Invalid YAML syntax:", e)
 
         case 'json':
             try:

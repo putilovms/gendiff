@@ -7,7 +7,7 @@ def get_content(file_path):
             _, ext = os.path.splitext(file_path)
             content = f.read()
     except OSError:
-        print (f"Could not open/read file: {file_path}")
+        print(f"Could not open/read file: {file_path}")
     return (content, get_type(ext))
 
 
