@@ -3,8 +3,17 @@ import yaml
 
 
 def parse(content, type):
+    data = ''
     match type:
         case 'yml':
-            return yaml.safe_load(content)
+            try:
+                data = yaml.safe_load(content)
+            except yaml.YAMLError as e:
+                print ("Invalid YAML syntax:", e)
+
         case 'json':
-            return json.loads(content)
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError as e:
+                print("Invalid JSON syntax:", e)
+    return data

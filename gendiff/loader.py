@@ -2,9 +2,12 @@ import os
 
 
 def get_content(file_path):
-    with open(file_path, 'r') as f:
-        _, ext = os.path.splitext(file_path)
-        content = f.read()
+    try:
+        with open(file_path, 'r') as f:
+            _, ext = os.path.splitext(file_path)
+            content = f.read()
+    except OSError:
+        print (f"Could not open/read file: {file_path}")
     return (content, get_type(ext))
 
 
