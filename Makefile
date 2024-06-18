@@ -4,7 +4,7 @@ install:
 build:
 	poetry build
 
-install-pack:
+package-install:
 	python3 -m pip install --user --force-reinstall dist/*.whl
 
 publish:
