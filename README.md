@@ -23,6 +23,13 @@ To use it just type `gendiff [-h] [-f FORMAT] <path_to_file_1> <path_to_file_2>`
   * `plain` - displaying differences line by line
   * `json` - output in json format
 
+The command for the example: `gendiff example/file1.json example/file2.json`
+
+## Docker
+1. Create an image: `>> docker build . -t gendiff`
+2. Run the container in the background: `>> docker run --name gendiff -itd --rm gendiff`
+3. Connect to a container: `>> docker exec -it gendiff bash`
+
 ## Examples of uses
 ### Diff of flat files (JSON)
 [![asciicast](https://asciinema.org/a/y883XzL7Hyb8cqRXrJXJ02CzI.svg)](https://asciinema.org/a/y883XzL7Hyb8cqRXrJXJ02CzI)
