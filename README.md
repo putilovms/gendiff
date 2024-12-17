@@ -10,14 +10,18 @@ An application for finding the difference in 2 files of json, yaml, yaml formats
 ## Installation
 1. Requires Python version 3.10 or higher and Poetry
 2. Clone the project: `>> git clone https://github.com/putilovms/python-project-50.git`
-3. Build the project using the command: `>> make build`
-4. Install the project: `>> make package-install`
+3. Install the project: `>> make install`
+4. Build the project: `>> make build`
+5. Install the package: `>> make package-install`
 
 ### Usage and Options:
-To use it just type `gendiff <path_to_file_1> <path_to_file_2>`
+To use it just type `gendiff [-h] [-f FORMAT] <path_to_file_1> <path_to_file_2>`
 
 * -h, --help - show help message.
-* -f, --format - ability to specify format selection.
+* -f, --format - ability to specify format selection. Formats are available:
+  * `stylish` - displaying differences in the form of a tree
+  * `plain` - displaying differences line by line
+  * `json` - output in json format
 
 ## Examples of uses
 ### Diff of flat files (JSON)
